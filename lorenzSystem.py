@@ -1,17 +1,21 @@
 import numpy as np
+from scipy.integrate import solve_ivp
 
 class System:
 
-    def __init__(self, sigma, rho, beta):
+    def __init__(self, sigma, rho, beta, initialState = [1,1,1], precision = 100):
         self.sigma = sigma
         self.rho = rho
         self.beta = beta
+        self.initialState = initialState
+        self.precision = precision
 
-    def coordinates(self, timeRange):
-
-        #timeRange coefficent is points per unit
-        t = np.linspace(0, timeRange, timeRange * 10)
-        x = 0
-        y = 0
-        z = 0
-        return x, y, z
+    def values(self, t):
+        timePoints = np.linspace(0, t, t*self.precision)
+        def lorenz(time, initialState):
+            x, y, z = initialState
+            dxdt = self.sigma * (y-x)
+            dydt = (x * (self.rho - z)) - y
+            dzdt = (x*y) - (self.beta*z)
+            return [dxdt, dydt, dzdt]
+        return solve_ivp(lorenz, [0,t], self.initialState, t_eval=timePoints).y, timePoints

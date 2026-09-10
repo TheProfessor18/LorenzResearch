@@ -6,7 +6,9 @@ ax = plt.axes(projection='3d')
 
 system = System(10, 28, 8/3)
 
-ax.plot3D(system.coordinates(100))
+values, times = system.values(500)
+
+ax.plot3D(*values, linewidth = 0.1)
 
 plt.show()
 

@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d169c62-2f34-4298-9048-87d57501a9c7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/LorenzResearch.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plotting.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lorenzSystem.py" afterDir="false" />
+    <list default="true" id="4d169c62-2f34-4298-9048-87d57501a9c7" name="Changes" comment="Initial commit">
+      <change afterPath="$PROJECT_DIR$/neuralNetwork1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/LorenzResearch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/LorenzResearch.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plotting.py" beforeDir="false" afterPath="$PROJECT_DIR$/Plotting.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lorenzSystem.py" beforeDir="false" afterPath="$PROJECT_DIR$/lorenzSystem.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +26,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "TheProfessor18"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/TheProfessor18/LorenzResearch.git",
+    "accountId": "c2f64bae-2c4c-4c85-9673-7d24c47be105"
+  }
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -44,6 +54,7 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.Plotting.executor": "Run",
+    "Python.neuralNetwork1.executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
@@ -67,6 +78,19 @@
       <option name="presentableId" value="Default" />
       <updated>1788472598377</updated>
     </task>
+    <task id="LOCAL-00001" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1788473728083</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1788473728084</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
   </component>
 </project>
