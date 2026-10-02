@@ -3,7 +3,7 @@ from scipy.integrate import solve_ivp
 
 class System:
 
-    def __init__(self, sigma, rho, beta, initialState = [1,1,1], precision = 100):
+    def __init__(self, sigma, rho, beta, precision = 1, initialState = [1,1,1]):
         self.sigma = sigma
         self.rho = rho
         self.beta = beta
