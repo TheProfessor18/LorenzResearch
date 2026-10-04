@@ -86,6 +86,30 @@ def getPredictionsFullData(x_gt, y_gt, z_gt):
         z_pred = np.append(z_pred, results[0][2])
     return x_pred, y_pred, z_pred
 
+def getRecrusivePrediction(x_gt, y_gt, z_gt, lengthOfOutput, keepOriginal = False):
+    x, y, z = x_gt, y_gt, z_gt
+
+    for i in range(len(x_gt), lengthOfOutput):
+        x_in, y_in, z_in = [], [], []
+        for j in range(1, 17):
+            x_in.append(x[i - (j * 10)])
+            y_in.append(y[i - (j * 10)])
+            z_in.append(z[i - (j * 10)])
+        for k in range(1, 6):
+            x_in.append(x[i - k])
+            y_in.append(y[i - k])
+            z_in.append(z[i - k])
+        input = torch.tensor([[*x_in, *y_in, *z_in]], dtype=torch.float32)
+        results = model.forward(input).detach().numpy()
+        x = np.append(x, results[0][0])
+        y = np.append(y, results[0][1])
+        z = np.append(z, results[0][2])
+    if not keepOriginal:
+        x = x[len(x_gt):]
+        y = y[len(y_gt):]
+        z = z[len(z_gt):]
+    return x, y, z
+
 try:
     model.load_state_dict(torch.load('model.pth', weights_only=True))
     print('Model found, and loaded.')
