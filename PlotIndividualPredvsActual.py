@@ -6,7 +6,7 @@ import neuralNetwork1 as nn
 
 #define precision and timespan
 precision = 100
-timespan = 100
+timespan = 500
 
 #get actual values from the Lorenz System
 system = System(10, 28, 8/3, precision)
@@ -14,7 +14,7 @@ values, times = system.values(timespan)
 x_gt, y_gt, z_gt = values
 
 #get predicted values
-x_pred, y_pred, z_pred = nn.getPredictionsFullData(x_gt, y_gt, z_gt, times)
+x_pred, y_pred, z_pred = nn.getPredictionsFullData(x_gt, y_gt, z_gt)
 
 #create 3 rows and 1 column of plots
 fig, ax = plt.subplots(3,1, sharex=True)
