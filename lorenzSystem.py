@@ -18,4 +18,6 @@ class System:
             dydt = (x * (self.rho - z)) - y
             dzdt = (x*y) - (self.beta*z)
             return [dxdt, dydt, dzdt]
-        return solve_ivp(lorenz, [0,t], self.initialState, t_eval=timePoints).y, timePoints
+        solutions = solve_ivp(lorenz, [0,t], self.initialState, t_eval=timePoints).y
+        x, y, z = solutions
+        return x, y, z, timePoints

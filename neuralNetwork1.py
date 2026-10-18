@@ -26,40 +26,48 @@ class NeuralNetwork(nn.Module):
         return self.linear_tanh_stack(x)
 
 model = NeuralNetwork().to(device)
-#print(model)
 
-#L1Loss is Mean Absolute Error loss function
-lossFunction = nn.L1Loss()
-optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
-system = System(10, 28, 8/3, 100)
+lossFunction = nn.L1Loss() #L1Loss is Mean Absolute Error loss function
+optimizerFunction = torch.optim.SGD(model.parameters(), lr=1e-3)
 
-def train(model, loss_fn, optimizer):
+def prepareInputData(xarray, yarray, zarray, index, precision, backCount = 16, pointsPerInteger = 10, curveCount = 5):
+    x_in, y_in, z_in = [], [], []
+    for j in range(1, backCount + 1):
+        x_in.append(xarray[index - (j * int(precision/pointsPerInteger))])
+        y_in.append(yarray[index - (j * int(precision/pointsPerInteger))])
+        z_in.append(zarray[index - (j * int(precision/pointsPerInteger))])
+    for k in range(1, curveCount + 1):
+        x_in.append(xarray[index - k])
+        y_in.append(yarray[index - k])
+        z_in.append(zarray[index - k])
+
+    X = torch.tensor([[*x_in, *y_in, *z_in]], dtype=torch.float32)
+
+    X = X.to(device)
+
+    return X
+
+
+def train(model, trainingData):
 
     #sets the model to training mode
     model.train()
 
-    values, times = system.values(1000)
-    xarray, yarray, zarray = values
+    loss_fn = lossFunction
+    optimizer = optimizerFunction
 
-    for i in range(16,len(times),10):
+    xarray, yarray, zarray, times = trainingData
+
+    for i in range(160,len(times),10):
+        X = prepareInputData(xarray, yarray, zarray, i, 100)
+        #print(X)
         x_gt, y_gt, z_gt = xarray[i], yarray[i], zarray[i]
-        x_in, y_in, z_in = [], [], []
-        for j in range(1,17):
-            x_in.append(xarray[i - (j*10)])
-            y_in.append(yarray[i - (j*10)])
-            z_in.append(zarray[i - (j*10)])
-        for k in range(1,6):
-            x_in.append(xarray[i - k])
-            y_in.append(yarray[i - k])
-            z_in.append(zarray[i - k])
-
-        X = torch.tensor([[*x_in, *y_in, *z_in]], dtype=torch.float32)
         y = torch.tensor([[x_gt, y_gt, z_gt]], dtype=torch.float32)
-
-        X, y  = X.to(device), y.to(device)
+        y = y.to(device)
 
         pred = model(X)
         loss = loss_fn(pred, y)
+        #print(f'Pred: {pred}, actual: {y}, loss: {loss}')
 
         loss.backward()
         optimizer.step()
@@ -70,16 +78,7 @@ def getPredictionsFullData(x_gt, y_gt, z_gt):
     y_pred = np.zeros(160)
     z_pred = np.zeros(160)
     for i in range(160, len(x_gt)):
-        x_in, y_in, z_in = [], [], []
-        for j in range(1, 17):
-            x_in.append(x_gt[i - (j * 10)])
-            y_in.append(y_gt[i - (j * 10)])
-            z_in.append(z_gt[i - (j * 10)])
-        for k in range(1, 6):
-            x_in.append(x_gt[i - k])
-            y_in.append(y_gt[i - k])
-            z_in.append(z_gt[i - k])
-        input = torch.tensor([[*x_in, *y_in, *z_in]], dtype=torch.float32)
+        input = prepareInputData(x_gt, y_gt, z_gt, i, 100)
         results = model.forward(input).detach().numpy()
         x_pred = np.append(x_pred, results[0][0])
         y_pred = np.append(y_pred, results[0][1])
@@ -88,18 +87,8 @@ def getPredictionsFullData(x_gt, y_gt, z_gt):
 
 def getRecrusivePrediction(x_gt, y_gt, z_gt, lengthOfOutput, keepOriginal = False):
     x, y, z = x_gt, y_gt, z_gt
-
     for i in range(len(x_gt), lengthOfOutput):
-        x_in, y_in, z_in = [], [], []
-        for j in range(1, 17):
-            x_in.append(x[i - (j * 10)])
-            y_in.append(y[i - (j * 10)])
-            z_in.append(z[i - (j * 10)])
-        for k in range(1, 6):
-            x_in.append(x[i - k])
-            y_in.append(y[i - k])
-            z_in.append(z[i - k])
-        input = torch.tensor([[*x_in, *y_in, *z_in]], dtype=torch.float32)
+        input = prepareInputData(x, y, z, i, 100)
         results = model.forward(input).detach().numpy()
         x = np.append(x, results[0][0])
         y = np.append(y, results[0][1])
@@ -118,13 +107,16 @@ except:
 
 if __name__ == '__main__':
 
+    system = System(10, 28, 8 / 3, 100)
+    trainingData = system.values(200)
+
     #if running this program, train.
     epochs = 4000
 
     try:
         for t in range(epochs):
             print(f'Epoch {t}')
-            train(model, lossFunction, optimizer)
+            train(model, trainingData)
     finally:
         torch.save(model.state_dict(), 'model.pth')
 
