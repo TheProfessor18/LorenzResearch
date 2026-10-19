@@ -1,6 +1,5 @@
 import torch
 from torch import nn
-from lorenzSystem import System
 import numpy as np
 
 device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else 'cpu'
@@ -19,6 +18,10 @@ class NeuralNetwork(nn.Module):
             nn.Tanh(),
             nn.Linear(128, 128),
             nn.Tanh(),
+            nn.Linear(128, 128),
+            nn.Tanh(),
+            nn.Linear(128, 128),
+            nn.Tanh(),
             nn.Linear(128, 3)
         )
     def forward(self, x):
@@ -28,7 +31,7 @@ class NeuralNetwork(nn.Module):
 model = NeuralNetwork().to(device)
 
 lossFunction = nn.L1Loss() #L1Loss is Mean Absolute Error loss function
-optimizerFunction = torch.optim.SGD(model.parameters(), lr=1e-3)
+optimizerFunction = torch.optim.SGD(model.parameters(), lr=1e-4)
 
 def prepareInputData(xarray, yarray, zarray, index, precision, backCount = 16, pointsPerInteger = 10, curveCount = 5):
     x_in, y_in, z_in = [], [], []
@@ -104,21 +107,6 @@ try:
     print('Model found, and loaded.')
 except:
     print('No model found, making new one.')
-
-if __name__ == '__main__':
-
-    system = System(10, 28, 8 / 3, 100)
-    trainingData = system.values(200)
-
-    #if running this program, train.
-    epochs = 4000
-
-    try:
-        for t in range(epochs):
-            print(f'Epoch {t}')
-            train(model, trainingData)
-    finally:
-        torch.save(model.state_dict(), 'model.pth')
 
 
 

@@ -1,11 +1,14 @@
-from sympy.printing.pretty.pretty_symbology import line_width
-
 import neuralNetwork1 as nn
 from lorenzSystem import System
 import matplotlib.pyplot as plt
+from PlotIndividualPredvsActual import plotIndividual
+from sklearn.metrics import mean_absolute_error
 
-training = True
-epochs = 1000
+training = False
+epochs = 200
+
+predictRecursively = True
+visualize2d = False
 
 precision = 100
 sigma = 10
@@ -25,21 +28,27 @@ validationData = totalX[(validationSplitPoints[0]*precision):(validationSplitPoi
 
 if __name__ == '__main__':
 
+    testX, testY, testZ, times = testingData
+
     if training:
         try:
             for t in range(epochs):
                 print(f'Epoch {t}')
-                #print(trainingData)
                 nn.train(nn.model, trainingData)
         finally:
             nn.torch.save(nn.model.state_dict(), 'model.pth')
 
+    if predictRecursively:
+        predictions = nn.getRecrusivePrediction(testX[:100], testY[:100], testZ[:100], (99 * precision), True)
+    else:
+        predictions = nn.getPredictionsFullData(testX, testY, testZ)
+
+    if visualize2d:
+        plotIndividual(testX, testY, testZ, *predictions, times)
+
     fig = plt.figure()
     ax = plt.axes(projection='3d')
-    trainX, trainY, trainZ, traintimes = trainingData
-    testX, testY, testZ, times = testingData
-    recursivePredictions = nn.getRecrusivePrediction(testX, testY, testZ, (1000 * precision))
-    fullDataPredictions = nn.getPredictionsFullData(testX, testY, testZ)
-    ax.plot3D(*fullDataPredictions, linewidth=0.1, c='red')
-    #ax.plot3D(testX, testY, testZ, linewidth=0.1, c='black')
+    ax.plot3D(*predictions, linewidth=0.1, c='red')
+    ax.plot3D(testX, testY, testZ, linewidth=0.1, c='black')
     plt.show()
+
