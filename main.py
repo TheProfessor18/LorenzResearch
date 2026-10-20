@@ -2,13 +2,16 @@ import neuralNetwork1 as nn
 from lorenzSystem import System
 import matplotlib.pyplot as plt
 from PlotIndividualPredvsActual import plotIndividual
-from sklearn.metrics import mean_absolute_error
+from plotErrorVsTime import plotError
 
 training = False
 epochs = 200
 
-predictRecursively = True
+predictRecursively = False
+
+visualizeGroundTruth = True
 visualize2d = False
+visualizeError = True
 
 precision = 100
 sigma = 10
@@ -46,9 +49,13 @@ if __name__ == '__main__':
     if visualize2d:
         plotIndividual(testX, testY, testZ, *predictions, times)
 
+    if visualizeError:
+        plotError(testX, testY, testZ, *predictions, times)
+
     fig = plt.figure()
     ax = plt.axes(projection='3d')
     ax.plot3D(*predictions, linewidth=0.1, c='red')
-    ax.plot3D(testX, testY, testZ, linewidth=0.1, c='black')
+    if visualizeGroundTruth:
+        ax.plot3D(testX, testY, testZ, linewidth=0.1, c='black')
     plt.show()
 
