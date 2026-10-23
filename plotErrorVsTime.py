@@ -1,5 +1,3 @@
-from sklearn.metrics import mean_absolute_error
-import numpy as np
 from matplotlib import pyplot as plt
 
 def plotError(actualX, actualY, actualZ, predictedX, predictedY, predictedZ, time):
@@ -11,11 +9,11 @@ def plotError(actualX, actualY, actualZ, predictedX, predictedY, predictedZ, tim
 
     # plot each variable
     ax[0].plot(time, Xerror, c='r', linewidth=0.4)
-    ax[0].set_ylabel('X-Axis Error (MAE)')
+    ax[0].set_ylabel('X-Axis Error (AE)')
     ax[1].plot(time, Yerror, c='b', linewidth=0.4)
-    ax[1].set_ylabel('Y-Axis Error (MAE)')
+    ax[1].set_ylabel('Y-Axis Error (AE)')
     ax[2].plot(time, Zerror, c='g', linewidth=0.4)
-    ax[2].set_ylabel('Z-Axis Error (MAE)')
+    ax[2].set_ylabel('Z-Axis Error (AE)')
 
     plt.xlabel('Time')
     ax[0].xaxis.grid()

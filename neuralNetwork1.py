@@ -77,9 +77,9 @@ def train(model, trainingData):
         optimizer.zero_grad()
 
 def getPredictionsFullData(x_gt, y_gt, z_gt):
-    x_pred = np.zeros(160)
-    y_pred = np.zeros(160)
-    z_pred = np.zeros(160)
+    x_pred = np.full(160, np.nan).astype(float)
+    y_pred = np.full(160, np.nan).astype(float)
+    z_pred = np.full(160, np.nan).astype(float)
     for i in range(160, len(x_gt)):
         input = prepareInputData(x_gt, y_gt, z_gt, i, 100)
         results = model.forward(input).detach().numpy()
@@ -97,9 +97,9 @@ def getRecrusivePrediction(x_gt, y_gt, z_gt, lengthOfOutput, keepOriginal = Fals
         y = np.append(y, results[0][1])
         z = np.append(z, results[0][2])
     if not keepOriginal:
-        x = x[len(x_gt):]
-        y = y[len(y_gt):]
-        z = z[len(z_gt):]
+        x = np.concatenate((np.full(len(x_gt), np.nan).astype(float), x[len(x_gt):]))
+        y = np.concatenate((np.full(len(y_gt), np.nan).astype(float), y[len(y_gt):]))
+        z = np.concatenate((np.full(len(z_gt), np.nan).astype(float), z[len(z_gt):]))
     return x, y, z
 
 try:
