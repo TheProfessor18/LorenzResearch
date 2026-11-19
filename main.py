@@ -44,7 +44,7 @@ if __name__ == '__main__':
             nn.save()
 
     if predictRecursively:
-        predictions = nn.getRecrusivePrediction(testX[:100], testY[:100], testZ[:100], times[:100], (100 * precision))
+        predictions = nn.getRecrusivePrediction(testX[:160], testY[:160], testZ[:160], times[:160], (1000 * precision))
     else:
         predictions = nn.getPredictionsFullData(testX, testY, testZ, times)
 
