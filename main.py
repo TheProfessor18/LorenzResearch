@@ -47,7 +47,7 @@ if __name__ == '__main__':
         predictions = nn.getRecrusivePrediction(testX[:160], testY[:160], testZ[:160], times[:160], (1000 * precision))
     else:
         predictions = nn.getPredictionsFullData(testX, testY, testZ, times)
-#
+
     predX, predY, predZ, newTimes = predictions
 
     if visualize2d:
