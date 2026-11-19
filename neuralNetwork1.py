@@ -61,7 +61,7 @@ def train(model, trainingData):
 
     xarray, yarray, zarray, times = trainingData
 
-    for i in range(160,len(times),10):
+    for i in range(160,len(times), 10):
         X = prepareInputData(xarray, yarray, zarray, i, 100)
         #print(X)
         x_gt, y_gt, z_gt = xarray[i], yarray[i], zarray[i]
@@ -76,31 +76,40 @@ def train(model, trainingData):
         optimizer.step()
         optimizer.zero_grad()
 
-def getPredictionsFullData(x_gt, y_gt, z_gt):
-    x_pred = np.full(160, np.nan).astype(float)
-    y_pred = np.full(160, np.nan).astype(float)
-    z_pred = np.full(160, np.nan).astype(float)
-    for i in range(160, len(x_gt)):
-        input = prepareInputData(x_gt, y_gt, z_gt, i, 100)
+def getPredictionsFullData(x_gt, y_gt, z_gt, times):
+    precision = int(1/(times[1] - times[0]))
+    x_pred = np.array([])
+    y_pred = np.array([])
+    z_pred = np.array([])
+    for i in range(int(1.6*precision), len(x_gt)):
+        input = prepareInputData(x_gt, y_gt, z_gt, i, precision)
         results = model.forward(input).detach().numpy()
         x_pred = np.append(x_pred, results[0][0])
         y_pred = np.append(y_pred, results[0][1])
         z_pred = np.append(z_pred, results[0][2])
-    return x_pred, y_pred, z_pred
+    outputTimes = np.append(times[int(precision*1.6):], times[-1] + (1/precision))
+    return x_pred, y_pred, z_pred, outputTimes
 
-def getRecrusivePrediction(x_gt, y_gt, z_gt, lengthOfOutput, keepOriginal = False):
+def getRecrusivePrediction(x_gt, y_gt, z_gt, times, lengthOfOutput, keepOriginal = False):
+    precision = int(1 / (times[1] - times[0]))
     x, y, z = x_gt, y_gt, z_gt
-    for i in range(len(x_gt), lengthOfOutput):
-        input = prepareInputData(x, y, z, i, 100)
+    for i in range(len(x_gt), lengthOfOutput+len(x_gt)):
+        input = prepareInputData(x, y, z, i, precision)
         results = model.forward(input).detach().numpy()
         x = np.append(x, results[0][0])
         y = np.append(y, results[0][1])
         z = np.append(z, results[0][2])
-    if not keepOriginal:
-        x = np.concatenate((np.full(len(x_gt), np.nan).astype(float), x[len(x_gt):]))
-        y = np.concatenate((np.full(len(y_gt), np.nan).astype(float), y[len(y_gt):]))
-        z = np.concatenate((np.full(len(z_gt), np.nan).astype(float), z[len(z_gt):]))
-    return x, y, z
+    if keepOriginal:
+        newTimes = times
+    else:
+        x = x[len(x_gt):]
+        y = y[len(y_gt):]
+        z = z[len(z_gt):]
+        newTimes = np.linspace(times[-1]+(1/precision), times[-1] + (lengthOfOutput/precision), lengthOfOutput) #endpoint = False to keep values spaced correctly
+    return x, y, z, newTimes
+
+def save():
+    torch.save(model.state_dict(), 'model.pth')
 
 try:
     model.load_state_dict(torch.load('model.pth', weights_only=True))

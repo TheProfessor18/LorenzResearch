@@ -1,18 +1,19 @@
-import neuralNetwork1 as nn
+import neuralNetwork3 as nn
 from lorenzSystem import System
 import matplotlib.pyplot as plt
 from PlotIndividualPredvsActual import plotIndividual
 from plotErrorVsTime import plotError
 import numpy as np
 
-training = False
-epochs = 200
+training = True
+epochs = 2
 
 predictRecursively = True
 
 visualizeGroundTruth = True
 visualize2d = True
 visualizeError = True
+zoom = 100
 
 precision = 100
 sigma = 10
@@ -40,25 +41,20 @@ if __name__ == '__main__':
                 print(f'Epoch {t}')
                 nn.train(nn.model, trainingData)
         finally:
-            nn.torch.save(nn.model.state_dict(), 'model.pth')
+            nn.save()
 
     if predictRecursively:
-        predictions = nn.getRecrusivePrediction(testX[:100], testY[:100], testZ[:100], (99 * precision))
+        predictions = nn.getRecrusivePrediction(testX[:100], testY[:100], testZ[:100], times[:100], (100 * precision))
     else:
-        predictions = nn.getPredictionsFullData(testX, testY, testZ)
+        predictions = nn.getPredictionsFullData(testX, testY, testZ, times)
 
-    predX, predY, predZ = predictions
-
-    #find early data that couldn't be predicted and remove it.
-    pointsToDelete = np.where(np.isnan(predX))
-    testX = np.delete(testX, pointsToDelete); testY = np.delete(testY, pointsToDelete); testZ = np.delete(testZ, pointsToDelete); times = np.delete(times, pointsToDelete)
-    predX = np.delete(predX, pointsToDelete); predY = np.delete(predY, pointsToDelete); predZ = np.delete(predZ, pointsToDelete)
+    predX, predY, predZ, newTimes = predictions
 
     if visualize2d:
-        plotIndividual(testX, testY, testZ, predX, predY, predZ, times)
+        plotIndividual(testX[100:zoom+100], testY[100:zoom+100], testZ[100:zoom+100], predX[:zoom], predY[:zoom], predZ[:zoom], newTimes[:zoom], True)
 
     if visualizeError:
-        plotError(testX, testY, testZ, predX, predY, predZ, times)
+        plotError(testX[100:zoom+100], testY[100:zoom+100], testZ[100:zoom+100], predX[:zoom], predY[:zoom], predZ[:zoom], newTimes[:zoom], True)
 
     fig = plt.figure()
     ax = plt.axes(projection='3d')

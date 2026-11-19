@@ -2,10 +2,11 @@ from matplotlib import pyplot as plt
 from lorenzSystem import System
 import numpy as np
 from sklearn.metrics import mean_absolute_error
-import neuralNetwork1 as nn
+#import neuralNetwork1 as nn
 
-def plotIndividual(x_gt, y_gt, z_gt, x_pred, y_pred, z_pred, times):
+def plotIndividual(x_gt, y_gt, z_gt, x_pred, y_pred, z_pred, times, allTics = False):
     #create 3 rows and 1 column of plots
+    precision = int(1 / (times[1] - times[0]))
     fig, ax = plt.subplots(3,1, sharex=True)
 
     #plot each variable
@@ -18,6 +19,14 @@ def plotIndividual(x_gt, y_gt, z_gt, x_pred, y_pred, z_pred, times):
     ax[2].plot(times, z_gt, c='g', linewidth=0.4)
     ax[2].plot(times, z_pred, c='black', linewidth=0.4)
     ax[2].set_ylabel('Z-Axis')
+
+    if allTics:
+        ax[0].set_xticks(np.arange(times[0], times[-1], 1/precision))
+        ax[0].tick_params("x", rotation=45, rotation_mode="xtick")
+        ax[1].set_xticks(np.arange(times[0], times[-1], 1/precision))
+        ax[1].tick_params("x", rotation=45, rotation_mode="xtick")
+        ax[2].set_xticks(np.arange(times[0], times[-1], 1/precision))
+        ax[2].tick_params("x", rotation=45, rotation_mode="xtick")
 
     plt.xlabel('Time')
     ax[0].xaxis.grid()

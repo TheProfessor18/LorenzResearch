@@ -11,7 +11,7 @@ class System:
         self.precision = precision
 
     def values(self, t):
-        timePoints = np.linspace(0, t, t*self.precision)
+        timePoints = np.linspace(0, t, t*self.precision, endpoint=False) #endpoint = False excludes the last value, to make the points appropriately spaced.
         def lorenz(time, initialState):
             x, y, z = initialState
             dxdt = self.sigma * (y-x)
