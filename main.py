@@ -6,7 +6,7 @@ from plotErrorVsTime import plotError
 import numpy as np
 
 training = True
-epochs = 2
+epochs = 1000
 
 predictRecursively = True
 
@@ -61,5 +61,6 @@ if __name__ == '__main__':
     ax.plot3D(predX, predY, predZ, linewidth=0.1, c='red')
     if visualizeGroundTruth:
         ax.plot3D(testX, testY, testZ, linewidth=0.1, c='black')
+    plt.savefig('3dVisualization.jpg')
     plt.show()
 

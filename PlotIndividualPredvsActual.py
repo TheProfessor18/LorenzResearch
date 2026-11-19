@@ -37,6 +37,7 @@ def plotIndividual(x_gt, y_gt, z_gt, x_pred, y_pred, z_pred, times, allTics = Fa
     print(f'Mean absolute error of Y: {mean_absolute_error(y_gt, y_pred)}')
     print(f'Mean absolute error of Z: {mean_absolute_error(z_gt, z_pred)}')
 
+    plt.savefig('individualvsActual.jpg')
     plt.show()
 
 if __name__ == "__main__":

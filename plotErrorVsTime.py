@@ -34,4 +34,5 @@ def plotError(actualX, actualY, actualZ, predictedX, predictedY, predictedZ, tim
     ax[1].xaxis.grid()
     ax[2].xaxis.grid()
 
+    plt.savefig('individualError.jpg')
     plt.show()
